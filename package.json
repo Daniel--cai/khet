@@ -1,0 +1,10 @@
+{
+    "name": "khet",
+    "version": "1.0.0",
+    "description": "Khet",
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "uuid": "^2.0.3"
+    }
+  }
