@@ -1,10 +1,14 @@
 {
-    "name": "khet",
-    "version": "1.0.0",
-    "description": "Khet",
-    "author": "",
-    "license": "MIT",
-    "dependencies": {
-      "uuid": "^2.0.3"
-    }
+  "name": "khet",
+  "version": "1.0.0",
+  "description": "Khet",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^2.0.3"
+  },
+  "devDependencies": {
+    "serverless": "^1.25.0",
+    "serverless-offline": "^3.16.0"
   }
+}
