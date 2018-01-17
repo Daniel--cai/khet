@@ -15,10 +15,17 @@ provider:
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       # Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
+  app:
+    handler: index.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
   create:
     handler: users/create.create
     events:
@@ -54,4 +61,10 @@ resources:
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
 
 plugins:
+  - serverless-dynamodb-local
   - serverless-offline
+
+custom: 
+  dynamodb:
+      start:
+        migrate: true
