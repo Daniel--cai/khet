@@ -1,7 +1,8 @@
 import { h, Component } from 'preact';
 import style from './style';
+import Api from '../../framework/api';
 
-export default class Profile extends Component {
+export default class Game extends Component {
 	state = {
 		time: Date.now(),
 		count: 10
@@ -11,6 +12,9 @@ export default class Profile extends Component {
 	componentDidMount() {
 		// start a timer for the clock:
 		this.timer = setInterval(this.updateTime, 1000);
+		const response = Api.get('/users/1')
+		console.log(response.data)
+
 	}
 
 	// gets called just before navigating away from the route
