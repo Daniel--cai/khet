@@ -17,10 +17,15 @@
     "build/*"
   ],
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "eslint": "^4.9.0",
     "eslint-config-synacor": "^2.0.2",
     "if-env": "^1.0.0",
-    "preact-cli": "^2.0.1"
+    "preact-cli": "^2.0.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
     "axios": "^0.17.1",
