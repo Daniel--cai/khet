@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
-import style from './style';
+import style from './style.css';
 import classNames from 'classnames';
 export default class Header extends Component {
 	render() {
@@ -10,7 +10,7 @@ export default class Header extends Component {
 					<a class="navbar-item" href="#">
 						<img src="../../assets/images/logo.png" />
 					</a>
-					<div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+					<div class="navbar-burger burger" >
 						<span></span>
 						<span></span>
 						<span></span>

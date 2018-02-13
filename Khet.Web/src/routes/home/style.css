@@ -1,5 +1,5 @@
 .landing {
-	background-image: url('../../assets/images/wallpaper.jpg');
+	background: url('../../assets/images/wallpaper.jpg');
 	background-size:     cover;                      
     background-repeat:   no-repeat;
     background-position: center center;

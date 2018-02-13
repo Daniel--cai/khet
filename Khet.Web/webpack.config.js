@@ -1,32 +1,46 @@
 const path = require('path')
+const webpack = require('webpack')
 module.exports = {
     //input
     entry: './src/',
 
     output: {
         path: path.join(__dirname, 'build'),
-        filename:'bundle.js'
+        filename: 'bundle.js'
     },
 
     module: {
         rules: [
             {
                 test: /\.jsx?/,
-                exclude: /node_modules/,
                 loader: 'babel-loader',
-                options: {
-                    plugins: [
-                        ['transform-react-jsx', {pragma: 'h'}]
-                    ]
-                }
+            },
+            {
+                test: /\.(png|jpg)$/,
+                loader: 'url-loader',
+                exclude: /node_modules/
+            },
+            //{
+            //     test: /\.(png|jpg)$/,
+            //     use: 'file-loader',
+            //     exclude: /node_modules/,
+            // },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader?modules']
             }
+
         ]
     },
     devtool: 'source-map',
-    devServer :{
+    devServer: {
         contentBase: path.join(__dirname, 'src'),
-        compress:true,
-        historyApiFallback:true
-    }
+        compress: true,
+        historyApiFallback: true,
+        hot: true
+    },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ]
     //server
 }

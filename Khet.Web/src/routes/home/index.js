@@ -1,11 +1,12 @@
 import { h, Component } from 'preact';
-import style from './style';
+import style from './style.css';
 import Header from '../../components/header';
 import classNames from 'classnames'
 
 export default class Home extends Component {
 	render() {
 		const bodyClass = classNames('')
+		console.log(style)
 		return (
 			<div>
 				<section class={classNames('hero', 'is-fullheight', style.landing)}>
@@ -18,7 +19,7 @@ export default class Home extends Component {
 								Khet
 						</h1>
 							<h2 class="subtitle is-2">
-								Subtitle
+								Laser Chess
 						</h2>
 						</div>
 					</div>
@@ -27,23 +28,42 @@ export default class Home extends Component {
 					<div class="hero-body">
 						<div class="container has-text-centered">
 							<p class="title is-3 ">
-								Contact Us
+								How To Play
 							</p>
-							<div class="field has-addons">
-								<p class="control has-icons-left has-icons-right">
+						</div>
+					</div>
+				</section >
+				<section class={classNames('hero', 'is-light', 'is-medium')}>
+					<div class="hero-body">
+						<div class="container ">
+							<p class="title is-3 ">
+								Join Now!
+							</p>
+							<div class="field">
+								<p class="control has-icons-left">
+									<input class="input" type="email" placeholder="Display Name" />
+									<span class="icon is-small is-left">
+										<i class="fas fa-user"></i>
+									</span>
+								</p>
+							</div>
+							<div class="field">
+								<p class="control has-icons-left">
 									<input class="input" type="email" placeholder="Email" />
 									<span class="icon is-small is-left">
 										<i class="fas fa-envelope"></i>
 									</span>
-									<span class="icon is-small is-right">
-										<i class="fas fa-check"></i>
-									</span>
 								</p>
-								<div class="control">
-									<a class="button is-info">
-										Search
-									</a>
+							</div>
+
+							<div class="field">
+								<textarea class="textarea" placeholder="Description" />
+							</div>
+							<div class="field ">
+								<div class="control ">
+									<button class="button is-link is-fullwidth">Join</button>
 								</div>
+
 							</div>
 						</div>
 					</div>

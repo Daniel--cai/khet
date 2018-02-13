@@ -1,6 +1,16 @@
-//import './style.css';
-import 'bulma/css/bulma.css'
+//import 'bulma/css/bulma.css'
 import App from './components/app';
+import { h, render } from 'preact';
 
-export default App;
+let root;
+
+function init() {
+    root = render(<App/>, document.body, root);
+}
+
+init();
+
+
+
+
 

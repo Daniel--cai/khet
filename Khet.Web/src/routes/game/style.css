@@ -1,5 +1,45 @@
-.profile {
-	padding: 56px 20px;
-	min-height: 100%;
-	width: 100%;
+.table {
+	border: 1px solid #aaa;
+}
+.table td {
+	width:75px;
+	height:75px;
+	text-align: center;
+	border: solid 1px #aaa;
+	vertical-align: middle
+}
+
+.table td > * {
+	user-drag: none; 
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+.white {
+	background: whitesmoke
+}
+
+.piece{
+	width: 50px;
+	height:50px;
+}
+
+.red {
+	background: #ff3860
+}
+
+.friendly{
+	cursor: pointer;
+	
+}
+
+.table tr:nth-child(even) td:nth-child(odd), .table tr:nth-child(odd) td:nth-child(even) {
+	/* background: #eee; */
+
+}
+.table td:hover{
+	/* background: #eee !important; */
 }
