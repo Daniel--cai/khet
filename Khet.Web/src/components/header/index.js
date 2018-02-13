@@ -1,27 +1,28 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 import style from './style';
-
+import classNames from 'classnames';
 export default class Header extends Component {
 	render() {
 		return (
-			// <header class={style.header}>
-			// 	
-			// 	<nav>
-			// 		<Link activeClassName={style.active} href="/">Home</Link>
-			// 		<Link activeClassName={style.active} href="/game">Join</Link>
-			// 	</nav>
-			// </header>
-			<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+			<nav class={classNames('navbar', 'is-transparent')} >
 				<div class="navbar-brand">
 					<a class="navbar-item" href="#">
-						<img src="http://wiki.karstenrutledge.com/images/3/3c/Khet_Logo_384.png" />
+						<img src="../../assets/images/logo.png" />
 					</a>
-					<div class="navbar-dropdown is-right">
-
+					<div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+						<span></span>
+						<span></span>
+						<span></span>
 					</div>
 				</div>
-			</nav>
+				<div class="navbar-menu ">
+					<div class="navbar-end">
+						<Link class="navbar-item" activeClassName={style.active} href="/">Games</Link>
+						<Link class="navbar-item" activeClassName={style.active} href="/game">Join</Link>
+					</div>
+				</div>
+			</nav >
 		);
 	}
 }
