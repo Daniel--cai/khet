@@ -25,15 +25,15 @@ export default class Game extends Component {
 		if (colIndex == 0) {
 			tileColour = style.red;
 		}
-		if (colIndex == 7) {
+		if (colIndex == 9) {
 			tileColour = style.white
 		}
 
-		if (colIndex == 1 && [0, 7].indexOf(rowIndex) != -1) {
+		if (colIndex == 1 && [0, 9].indexOf(rowIndex) != -1) {
 			tileColour = style.white;
 		}
 
-		if (colIndex == 6 && [0, 7].indexOf(rowIndex) != -1) {
+		if (colIndex == 8 && [0, 9].indexOf(rowIndex) != -1) {
 			tileColour = style.red;
 		}
 		return tileColour
@@ -41,7 +41,7 @@ export default class Game extends Component {
 
 	render() {
 
-		Array.matrix = function (numrows, numcols, initial) {
+		Array.matrix = function (numcols,numrows, initial) {
 			var arr = [];
 			for (var i = 0; i < numrows; ++i) {
 				var columns = [];
@@ -53,35 +53,25 @@ export default class Game extends Component {
 			return arr;
 		}
 
-		let table = Array.matrix(8, 8, null)
+		let table = Array.matrix(10, 8, null)
 
-		table[3][3] = {
+		table[4][5] = {
+			type: "scarab",
+			player: 0,
+			direction: 'N'
+		}
+		table[4][4] = {
 			type: "scarab",
 			player: 0,
 			direction: 'N'
 		}
 		table[3][4] = {
 			type: "scarab",
-			player: 0,
+			player: 1,
 			direction: 'N'
 		}
-		table[4][3] = {
+		table[3][5] = {
 			type: "scarab",
-			player: 1,
-			direction: 'N'
-		}
-		table[4][4] = {
-			type: "scarab",
-			player: 1,
-			direction: 'N'
-		}
-		table[1][2] = {
-			type: "anubis",
-			player: 1,
-			direction: 'N'
-		}
-		table[1][6] = {
-			type: "sphinx",
 			player: 1,
 			direction: 'N'
 		}
@@ -98,19 +88,62 @@ export default class Game extends Component {
 			direction: 'N'
 		}
 
-		table[7][7] = {
+		table[7][9] = {
 			type: "sphinx",
 			player: 1,
 			direction: 'N'
 		}
 		table[7][7] = {
-			type: "sphinx",
-			player: 1,
+			type: "pyramid",
+			player: 0,
 			direction: 'N'
 		}
-		table[7][7] = {
-			type: "sphinx",
-			player: 1,
+
+		table[0][7] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+		table[3][7] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+		table[4][7] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+		table[5][6] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+		table[1][2] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+
+		table[3][0] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+
+		table[4][0] = {
+			type: "pyramid",
+			player: 0,
+			direction: 'N'
+		}
+		table[0][4] = {
+			type: "anubis",
+			player: 0,
+			direction: 'N'
+		}
+		table[0][6] = {
+			type: "anubis",
+			player: 0,
 			direction: 'N'
 		}
 
