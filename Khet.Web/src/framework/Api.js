@@ -7,4 +7,14 @@ export default class Api {
         //return await axios.get(`${BASE}${url}`);
         return await axios.get(FAKE_URL)
     }
+
+    static async post(url, body){
+        //return await axios.get(`${BASE}${url}`);
+        return await axios.post(FAKE_URL, body)
+    }
+
+    static async put(url, body){
+        //return await axios.get(`${BASE}${url}`);
+        return await axios.post(FAKE_URL, body)
+    }
 }

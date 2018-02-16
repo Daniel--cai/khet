@@ -5,5 +5,7 @@ Build Reason
 
 Start Serverless
 `serverless deploy`
+`https://xxxxxxxx.execute-api.xxxxxx.amazonaws.com/dev/users/1`
 
-`https://xxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/users/1`
+Start Offline
+`serverless offline start`
