@@ -2,19 +2,127 @@ import { h, Component } from 'preact';
 import style from './style.css';
 import Api from '../../framework/api';
 import classNames from 'classnames'
+import Tile, { Piece } from './Tile'
 
-const Piece = {
-	'scarab': '../../assets/images/scarab.png',
-	'anubis': '../../assets/images/anubis.png',
-	'sphinx': '../../assets/images/sphinx.png',
-	'pharaoh': '../../assets/images/pharaoh.png',
-	'obelisk': '../../assets/images/obelisk.png',
-	'pyramid': '../../assets/images/pyramid.png',
+Array.matrix = function (numcols, numrows, initial) {
+	var arr = [];
+	for (var i = 0; i < numrows; ++i) {
+		var columns = [];
+		for (var j = 0; j < numcols; ++j) {
+			columns[j] = initial;
+		}
+		arr[i] = columns;
+	}
+	return arr;
+}
+
+const InitializeBoard = () => {
+	const table = Array.matrix(10, 8, null)
+
+	table[4][5] = {
+		type: "scarab",
+		player: 0,
+		direction: 'N'
+	}
+	table[4][4] = {
+		type: "scarab",
+		player: 0,
+		direction: 'N'
+	}
+	table[3][4] = {
+		type: "scarab",
+		player: 1,
+		direction: 'N'
+	}
+	table[3][5] = {
+		type: "scarab",
+		player: 1,
+		direction: 'N'
+	}
+
+	table[0][0] = {
+		type: "sphinx",
+		player: 0,
+		direction: 'N'
+	}
+
+	table[7][7] = {
+		type: "sphinx",
+		player: 1,
+		direction: 'N'
+	}
+
+	table[7][9] = {
+		type: "sphinx",
+		player: 1,
+		direction: 'N'
+	}
+	table[7][7] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+
+	table[0][7] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+	table[3][7] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+	table[4][7] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+	table[5][6] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+	table[1][2] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+
+	table[3][0] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+
+	table[4][0] = {
+		type: "pyramid",
+		player: 0,
+		direction: 'N'
+	}
+	table[0][4] = {
+		type: "anubis",
+		player: 0,
+		direction: 'N'
+	}
+	table[0][6] = {
+		type: "anubis",
+		player: 0,
+		direction: 'N'
+	}
+	return table;
+
 }
 
 export default class Game extends Component {
 	constructor(props) {
 		super(props);
+
+
+		this.state = {
+			table: InitializeBoard()
+
+		}
 	}
 
 	// Note: `user` comes from the URL, courtesy of our router
@@ -40,113 +148,6 @@ export default class Game extends Component {
 	}
 
 	render() {
-
-		Array.matrix = function (numcols,numrows, initial) {
-			var arr = [];
-			for (var i = 0; i < numrows; ++i) {
-				var columns = [];
-				for (var j = 0; j < numcols; ++j) {
-					columns[j] = initial;
-				}
-				arr[i] = columns;
-			}
-			return arr;
-		}
-
-		let table = Array.matrix(10, 8, null)
-
-		table[4][5] = {
-			type: "scarab",
-			player: 0,
-			direction: 'N'
-		}
-		table[4][4] = {
-			type: "scarab",
-			player: 0,
-			direction: 'N'
-		}
-		table[3][4] = {
-			type: "scarab",
-			player: 1,
-			direction: 'N'
-		}
-		table[3][5] = {
-			type: "scarab",
-			player: 1,
-			direction: 'N'
-		}
-
-		table[0][0] = {
-			type: "sphinx",
-			player: 0,
-			direction: 'N'
-		}
-
-		table[7][7] = {
-			type: "sphinx",
-			player: 1,
-			direction: 'N'
-		}
-
-		table[7][9] = {
-			type: "sphinx",
-			player: 1,
-			direction: 'N'
-		}
-		table[7][7] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-
-		table[0][7] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-		table[3][7] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-		table[4][7] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-		table[5][6] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-		table[1][2] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-
-		table[3][0] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-
-		table[4][0] = {
-			type: "pyramid",
-			player: 0,
-			direction: 'N'
-		}
-		table[0][4] = {
-			type: "anubis",
-			player: 0,
-			direction: 'N'
-		}
-		table[0][6] = {
-			type: "anubis",
-			player: 0,
-			direction: 'N'
-		}
-
 		return (
 			<section class="hero is-fullheight">
 				<div class="hero-body">
@@ -159,17 +160,18 @@ export default class Game extends Component {
 							<thead />
 							<tbody>
 								{
-									table.map((row, rowIndex) => {
+									this.state.table.map((row, rowIndex) => {
+										{/* <img class={classNames(style.piece, piece.player == 0 ? style.friendly : '')} src={Piece[piece.type]} /> */ }
 										return (
 											<tr>
 												{
 													row.map((col, colIndex) => {
-														const piece = table[rowIndex][colIndex];
+														const piece = this.state.table[rowIndex][colIndex];
 
 														return (
 															<td class={this.tileColour(colIndex, rowIndex)}>
 																{piece != null &&
-																	<img class={classNames(style.piece, piece.player == 0 ? style.friendly : '')} src={Piece[piece.type]} />
+																	<Tile player={piece.player} type={piece.type} />
 																}
 															</td>
 														)
