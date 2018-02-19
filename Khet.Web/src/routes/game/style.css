@@ -31,6 +31,10 @@
 	background: #ff3860
 }
 
+.green {
+	background:rgba(0, 136, 0,0.25);
+}
+
 .friendly{
 	cursor: pointer;
 	

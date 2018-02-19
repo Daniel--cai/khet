@@ -2,11 +2,36 @@ import { h, Component } from 'preact';
 import style from './style.css';
 import Header from '../../components/header';
 import classNames from 'classnames'
+import linkState from 'linkstate';
+import axios from 'axios'
+
+const BASE_URL = "http://localhost:3000"
 
 export default class Home extends Component {
-	render() {
+	constructor(props) {
+		super(props);
+		this.handleClick = this.handleClick.bind(this);
+	}
+	handleClick(event) {
+		console.log(this.state)
+		const body = {
+			name: this.state.name,
+			email: this.state.email
+		}
+		const user = axios.post(`${BASE_URL}/users`, body).then(
+			response => {
+				console.log(response.data)
+				const users = axios.get(`${BASE_URL}/users`).then(response => {
+					console.log(response.data)
+				})
+
+			}
+		)
+
+	}
+
+	render({ }, { name, email }) {
 		const bodyClass = classNames('')
-		console.log(style)
 		return (
 			<div>
 				<section class={classNames('hero', 'is-fullheight', style.landing)}>
@@ -40,28 +65,17 @@ export default class Home extends Component {
 								Join Now!
 							</p>
 							<div class="field">
-								<p class="control has-icons-left">
-									<input class="input" type="email" placeholder="Display Name" />
-									<span class="icon is-small is-left">
-										<i class="fas fa-user"></i>
-									</span>
-								</p>
+								<input class="input" onInput={linkState(this, 'name')} placeholder="Display Name" />
 							</div>
 							<div class="field">
-								<p class="control has-icons-left">
-									<input class="input" type="email" placeholder="Email" />
-									<span class="icon is-small is-left">
-										<i class="fas fa-envelope"></i>
-									</span>
-								</p>
+								<input class="input" onInput={linkState(this, 'email')} placeholder="Email" />
 							</div>
-
 							<div class="field">
 								<textarea class="textarea" placeholder="Description" />
 							</div>
 							<div class="field ">
 								<div class="control ">
-									<button class="button is-link is-fullwidth">Join</button>
+									<button class="button is-link is-fullwidth" onClick={this.handleClick}>Join</button>
 								</div>
 
 							</div>

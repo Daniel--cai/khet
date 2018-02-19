@@ -4,21 +4,9 @@ const uuid = require('uuid');
 const AWS = require('aws-sdk');
 
 const bodyParser = require('body-parser');
+const { dbprovider } = require('../framework/dbprovider')
+let dynamoDb = dbprovider();
 
-const DYNAMODB_TABLE = process.env.DYNAMODB_TABLE
-let dynamoDb;
-
-let IS_OFFLINE = process.env.IS_OFFLINE;
-IS_OFFLINE = 'true'
-if (IS_OFFLINE === 'true') {
-    dynamoDb = new AWS.DynamoDB.DocumentClient({
-        region: 'localhost',
-        endpoint: 'http://localhost:8000'
-	})
-	console.log('offline')
-} else {
-    dynamoDb = new AWS.DynamoDB.DocumentClient();
-}
 
 module.exports.create = (event, context, callback) => {
 
@@ -44,10 +32,10 @@ module.exports.create = (event, context, callback) => {
 		if (err) {
 			callback(err, null);
 		} else
-		console.log(data)
+			console.log(data)
 		const response = {
 			statusCode: 200,
-			body: JSON.stringify("USER CREATED")
+			body: JSON.stringify(params)
 		}
 		callback(null, response);
 	})

@@ -29,17 +29,24 @@ functions:
   create:
     handler: users/create.create
     events:
-     - http:
-         path: users
-         method: post
-         cors: true
-  get:
-    handler: users/get.get
+      - http:
+          path: users
+          method: post
+          cors: true
+  list:
+    handler: users/get.list
     events:
       - http:
-          path: users/{id}
+          path: users
           method: get
           cors: true
+    get:
+      handler: users/get.one
+      events:
+        - http:
+            path: users/{id}
+            method: get
+            cors: true
 
 resources:
   Resources:

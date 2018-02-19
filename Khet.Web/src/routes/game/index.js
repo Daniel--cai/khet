@@ -129,7 +129,6 @@ export default class Game extends Component {
 
 	tileColour(colIndex, rowIndex) {
 		let tileColour = "";
-		console.log(colIndex, rowIndex)
 		if (colIndex == 0) {
 			tileColour = style.red;
 		}
@@ -137,12 +136,16 @@ export default class Game extends Component {
 			tileColour = style.white
 		}
 
-		if (colIndex == 1 && [0, 9].indexOf(rowIndex) != -1) {
+		if (colIndex == 1 && [0, 7].indexOf(rowIndex) != -1) {
 			tileColour = style.white;
 		}
 
-		if (colIndex == 8 && [0, 9].indexOf(rowIndex) != -1) {
+		if (colIndex == 8 && [0, 7].indexOf(rowIndex) != -1) {
 			tileColour = style.red;
+		}
+
+		if (colIndex == 3 &&rowIndex == 5) {
+			tileColour = style.green;
 		}
 		return tileColour
 	}
