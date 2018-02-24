@@ -3,6 +3,7 @@ import style from './style.css';
 import Api from '../../framework/api';
 import classNames from 'classnames'
 import Tile, { Piece } from './Tile'
+import immutable from 'immutable';
 
 Array.matrix = function (numcols, numrows, initial) {
 	var arr = [];
@@ -110,6 +111,14 @@ const InitializeBoard = () => {
 		player: 0,
 		direction: 'N'
 	}
+	//flatten table
+	
+	const flattenTable = []
+	for (let col =0; col<table.length; col++){
+		for(let row=0; row < table[col].length; row++){
+			flattenTable.push(table[col,row])
+		}
+	}
 	return table;
 
 }
@@ -117,12 +126,10 @@ const InitializeBoard = () => {
 export default class Game extends Component {
 	constructor(props) {
 		super(props);
-
-
 		this.state = {
 			table: InitializeBoard()
-
 		}
+		this.handleClick = this.handleClick.bind(this)
 	}
 
 	// Note: `user` comes from the URL, courtesy of our router
@@ -150,6 +157,14 @@ export default class Game extends Component {
 		return tileColour
 	}
 
+	handleClick(tile){
+		console.log(tile)
+		const table = this.state.table;
+		table[tile.x][tile.y].
+		this.setState(table)
+	}
+
+	
 	render() {
 		return (
 			<section class="hero is-fullheight">
@@ -174,7 +189,7 @@ export default class Game extends Component {
 														return (
 															<td class={this.tileColour(colIndex, rowIndex)}>
 																{piece != null &&
-																	<Tile player={piece.player} type={piece.type} />
+																	<Tile player={piece.player} type={piece.type} onClick={this.handleClick} col={colIndex} row={rowIndex}/>
 																}
 															</td>
 														)

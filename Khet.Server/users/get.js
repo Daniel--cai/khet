@@ -7,6 +7,7 @@ let dynamoDb = dbprovider();
 
 module.exports = {
   one: (event, context, callback) => {
+    console.log(event.pathParameters.id)
     const params = {
       TableName: process.env.DYNAMODB_TABLE,
       Key: {
@@ -16,7 +17,6 @@ module.exports = {
 
     dynamoDb.get(params, (err, result) => {
       if (err) {
-        console.error(err);
         callback(null, {
           statusCode: error.statusCode || 501,
           headers: { 'Content-Type': 'text/plain' },
@@ -42,7 +42,6 @@ module.exports = {
     const scanExecute = function (callback) {
       dynamoDb.scan(params, (err, result) => {
         if (err) {
-          console.error(err);
           callback(null, {
             statusCode: error.statusCode || 501,
             headers: { 'Content-Type': 'text/plain' },

@@ -35,7 +35,7 @@ module.exports.create = (event, context, callback) => {
 			console.log(data)
 		const response = {
 			statusCode: 200,
-			body: JSON.stringify(params)
+			body: JSON.stringify(params.Item)
 		}
 		callback(null, response);
 	})

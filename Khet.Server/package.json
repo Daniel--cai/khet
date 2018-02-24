@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
+    "start-reason": "bsb -make-world -w",
+    "start": "serverless offline start",
     "clean": "bsb -clean-world"
   },
   "dependencies": {
