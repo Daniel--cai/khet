@@ -11,16 +11,19 @@
     "clean": "bsb -clean-world"
   },
   "dependencies": {
-    "aws-sdk": "^2.183.0",
+    "aws-sdk": "^2.202.0",
+    "aws-signature-v4": "^1.2.1",
     "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
     "express": "^4.16.2",
     "serverless-http": "^1.5.2",
     "uuid": "^2.0.3"
   },
   "devDependencies": {
+    "bs-platform": "^2.1.0",
     "serverless": "^1.25.0",
     "serverless-dynamodb-local": "^0.2.27",
     "serverless-offline": "^3.16.0",
-    "bs-platform": "^2.1.0"
+    "serverless-secrets-plugin": "^0.1.0"
   }
 }

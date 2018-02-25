@@ -1,40 +1,30 @@
 import { h, Component } from 'preact';
 import style from './style.css';
 import Header from '../../components/header';
-import classNames from 'classnames'
+import classnames from 'classnames'
 import linkState from 'linkstate';
-import axios from 'axios'
 
-const BASE_URL = "http://localhost:3000"
+import { connect } from 'redux-zero/preact';
+import actions from './actions'
 
-export default class Home extends Component {
-	constructor(props) {
-		super(props);
-		this.handleClick = this.handleClick.bind(this);
-	}
-	handleClick(event) {
-		console.log(this.state)
-		const body = {
+import { route } from 'preact-router'
+
+
+
+class Home extends Component {
+	handleClick = async (event) => {
+		await this.props.setUsername({
 			name: this.state.name,
 			email: this.state.email
-		}
-		const user = axios.post(`${BASE_URL}/users`, body).then(
-			response => {
-				console.log(response.data)
-				const users = axios.get(`${BASE_URL}/users`).then(response => {
-					console.log(response.data)
-				})
-
-			}
-		)
-
+		})
+		route('/game')
 	}
 
-	render({ }, { name, email }) {
-		const bodyClass = classNames('')
+	render({ username, loading, guid }, { name, email }) {
+		const bodyClass = classnames('')
 		return (
 			<div>
-				<section class={classNames('hero', 'is-fullheight', style.landing)}>
+				<section class={classnames('hero', 'is-fullheight', style.landing)}>
 					< div class="hero-head " >
 						<Header />
 					</div >
@@ -49,20 +39,21 @@ export default class Home extends Component {
 						</div>
 					</div>
 				</section >
-				<section class={classNames('hero', 'is-dark', 'is-medium')}>
+				<section class={classnames('hero', 'is-dark', 'is-medium', style.howToPlay)}>
 					<div class="hero-body">
 						<div class="container has-text-centered">
 							<p class="title is-3 ">
 								How To Play
 							</p>
+							<iframe width="560" height="315" src="https://www.youtube.com/embed/dUGPyvyUxnM?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 						</div>
 					</div>
 				</section >
-				<section class={classNames('hero', 'is-light', 'is-medium')}>
+				<section class={classnames('section', style.join)}>
 					<div class="hero-body">
 						<div class="container ">
 							<p class="title is-3 ">
-								Join Now!
+								Join Now! ({username})
 							</p>
 							<div class="field">
 								<input class="input" onInput={linkState(this, 'name')} placeholder="Display Name" />
@@ -86,3 +77,7 @@ export default class Home extends Component {
 		);
 	}
 }
+
+
+const mapToProps = ({ username, loading, guid }) => ({ username, loading, guid });
+export default connect(mapToProps, actions)(Home);

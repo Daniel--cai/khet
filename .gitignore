@@ -5,7 +5,9 @@ jspm_packages
 # Serverless directories
 .serverless
 
-secret.js
 lib/
 .merlin
 .bsb.lock
+
+secret/
+secret*

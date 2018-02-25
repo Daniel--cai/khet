@@ -27,7 +27,16 @@ module.exports = {
             // },
             {
                 test: /\.css$/,
-                use: [ 'style-loader', 'css-loader?modules']
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        query: {
+                            modules: true,
+                            localIdentName: '[local]_[hash:base64:5]'
+                        }
+                    }
+                ]
             }
 
         ]
@@ -40,7 +49,12 @@ module.exports = {
         hot: true
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('development')
+            }
+        })
     ]
     //server
 }

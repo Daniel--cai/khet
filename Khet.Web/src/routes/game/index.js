@@ -1,135 +1,51 @@
 import { h, Component } from 'preact';
 import style from './style.css';
-import Api from '../../framework/api';
 import classNames from 'classnames'
 import Tile, { Piece } from './Tile'
 import immutable from 'immutable';
+import { InitialiseBoard } from './initialise'
+import { connect } from 'redux-zero/preact';
 
-Array.matrix = function (numcols, numrows, initial) {
-	var arr = [];
-	for (var i = 0; i < numrows; ++i) {
-		var columns = [];
-		for (var j = 0; j < numcols; ++j) {
-			columns[j] = initial;
-		}
-		arr[i] = columns;
-	}
-	return arr;
-}
+import WebsocketClient from '../../framework/WebsocketClient'
+import Guid from 'guid';
+//const getClientId = () => 'web-client:' + Guid.raw();
+const getMessageId = () => 'message-id:' + Guid.raw();
 
-const InitializeBoard = () => {
-	const table = Array.matrix(10, 8, null)
-
-	table[4][5] = {
-		type: "scarab",
-		player: 0,
-		direction: 'N'
-	}
-	table[4][4] = {
-		type: "scarab",
-		player: 0,
-		direction: 'N'
-	}
-	table[3][4] = {
-		type: "scarab",
-		player: 1,
-		direction: 'N'
-	}
-	table[3][5] = {
-		type: "scarab",
-		player: 1,
-		direction: 'N'
-	}
-
-	table[0][0] = {
-		type: "sphinx",
-		player: 0,
-		direction: 'N'
-	}
-
-	table[7][7] = {
-		type: "sphinx",
-		player: 1,
-		direction: 'N'
-	}
-
-	table[7][9] = {
-		type: "sphinx",
-		player: 1,
-		direction: 'N'
-	}
-	table[7][7] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-
-	table[0][7] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-	table[3][7] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-	table[4][7] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-	table[5][6] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-	table[1][2] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-
-	table[3][0] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-
-	table[4][0] = {
-		type: "pyramid",
-		player: 0,
-		direction: 'N'
-	}
-	table[0][4] = {
-		type: "anubis",
-		player: 0,
-		direction: 'N'
-	}
-	table[0][6] = {
-		type: "anubis",
-		player: 0,
-		direction: 'N'
-	}
-	//flatten table
-	
-	const flattenTable = []
-	for (let col =0; col<table.length; col++){
-		for(let row=0; row < table[col].length; row++){
-			flattenTable.push(table[col,row])
-		}
-	}
-	return table;
-
-}
-
-export default class Game extends Component {
+class Game extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			table: InitializeBoard()
+			users: [],
+			message: [],
+			isConnected: false,
+			table: InitialiseBoard()
 		}
-		this.handleClick = this.handleClick.bind(this)
+	}
+
+	connect = async () => {
+		this.client = new WebsocketClient(this.props.guid, this.props.username)
+
+		try {
+			const response = await this.client.connect();
+			this.setState({ isConnected: true });
+			console.log('connected!', response)
+			this.client.onMessageReceived((topic, message) => {
+				console.log('received info', message)
+			})
+		} catch (ex) {
+			console.log('error when connecting to IOT ', ex)
+		}
+	}
+	onSend = (message) => {
+		this.client.sendMessage({
+			username: this.state.username,
+			message,
+			id: getMessageId()
+		})
+	}
+
+	componentDidMount() {
+		this.connect()
 	}
 
 	// Note: `user` comes from the URL, courtesy of our router
@@ -151,20 +67,20 @@ export default class Game extends Component {
 			tileColour = style.red;
 		}
 
-		if (colIndex == 3 &&rowIndex == 5) {
+		if (colIndex == 3 && rowIndex == 5) {
 			tileColour = style.green;
 		}
 		return tileColour
 	}
 
-	handleClick(tile){
+	handleClick = (tile) => {
 		console.log(tile)
 		const table = this.state.table;
 		table[tile.x][tile.y].
-		this.setState(table)
+			this.setState(table)
 	}
 
-	
+
 	render() {
 		return (
 			<section class="hero is-fullheight">
@@ -189,7 +105,7 @@ export default class Game extends Component {
 														return (
 															<td class={this.tileColour(colIndex, rowIndex)}>
 																{piece != null &&
-																	<Tile player={piece.player} type={piece.type} onClick={this.handleClick} col={colIndex} row={rowIndex}/>
+																	<Tile player={piece.player} type={piece.type} onClick={this.handleClick} col={colIndex} row={rowIndex} />
 																}
 															</td>
 														)
@@ -227,3 +143,6 @@ export default class Game extends Component {
 		);
 	}
 }
+
+const mapToProps = ({ username, loading, guid }) => ({ username, loading, guid });
+export default connect(mapToProps, {})(Game)
