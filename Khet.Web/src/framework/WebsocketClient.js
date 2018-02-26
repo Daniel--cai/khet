@@ -2,7 +2,7 @@
 
 import mqtt from 'mqtt';
 
-const LOBBY_TOPIC = 'lobby';
+const LAST_WILL_TOPIC = 'last-will';
 const MOVE_TOPIC = 'move'
 const CLIENT_CONNECTED = 'client-connected';
 const CLIENT_DISCONNECTED = 'client-disconnected';
@@ -19,8 +19,8 @@ const validateClientConnected = (client) => {
 
 export default (clientId, username) => {
     const options = {
-        lobby: {
-            topic: LOBBY_TOPIC,
+        will: {
+            topic: LAST_WILL_TOPIC,
             payload: getNotification(clientId, username),
         }
     };
@@ -59,7 +59,7 @@ export default (clientId, username) => {
     };
     clientWrapper.onMessageReceived = (callback) => {
         validateClientConnected(client)
-        client.on('move', (topic, message) => {
+        client.on('message', (topic, message) => {
             console.log(`Received message: ${topic} - ${message}`);
             callback(topic, JSON.parse(message.toString('utf8')));
         });

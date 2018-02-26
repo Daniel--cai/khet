@@ -40,7 +40,7 @@ functions:
     timeout: 30
     events:
       - iot:
-          sql: "SELECT * FROM 'lobby'"
+          sql: "SELECT * FROM 'last-will'"
     environment:
       IOT_AWS_REGION: ${opt:region, self:provider.region}
       IOT_ENDPOINT_HOST: ${self:custom.secrets.IOT_ENDPOINT_HOST}

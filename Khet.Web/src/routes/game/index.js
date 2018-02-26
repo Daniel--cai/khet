@@ -76,8 +76,8 @@ class Game extends Component {
 	handleClick = (tile) => {
 		console.log(tile)
 		const table = this.state.table;
-		table[tile.x][tile.y].
-			this.setState(table)
+		//table[tile.x][tile.y] = tile
+		this.setState(table)
 	}
 
 
