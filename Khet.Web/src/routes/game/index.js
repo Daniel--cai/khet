@@ -18,7 +18,8 @@ class Game extends Component {
 			users: [],
 			message: [],
 			isConnected: false,
-			table: InitialiseBoard()
+			table: InitialiseBoard(),
+			selected: null
 		}
 	}
 
@@ -48,10 +49,10 @@ class Game extends Component {
 		this.connect()
 	}
 
-	// Note: `user` comes from the URL, courtesy of our router
 
 	tileColour(colIndex, rowIndex) {
 		let tileColour = "";
+
 		if (colIndex == 0) {
 			tileColour = style.red;
 		}
@@ -66,18 +67,45 @@ class Game extends Component {
 		if (colIndex == 8 && [0, 7].indexOf(rowIndex) != -1) {
 			tileColour = style.red;
 		}
+		if (this.state.selected !== null)
+			if (this.validMove(this.state.selected[0], this.state.selected[1], colIndex, rowIndex))
+				tileColour = style.green;
 
-		if (colIndex == 3 && rowIndex == 5) {
-			tileColour = style.green;
-		}
 		return tileColour
 	}
 
-	handleClick = (tile) => {
-		console.log(tile)
-		const table = this.state.table;
-		//table[tile.x][tile.y] = tile
-		this.setState(table)
+	validMove(x, y, col, row) {
+		if ((col == x + 0 && row == y - 1)
+			|| (col == x + 0 && row == y + 1)
+			|| (col == x - 1 && row == y - 1)
+			|| (col == x + 1 && row == y)
+			|| (col == x && row == y - 1)
+			|| (col == x && row == y + 1)
+			|| (col == x + 1 && row == y + 1)
+			|| (col == x && row == y + 1)
+			|| (col == x + 1 && row == y + 1)
+			|| (col == x - 1 && row == y + 1)
+			|| (col == x - 1 && row == y)
+			|| (col == x + 1 && row == y - 1)) {
+			return true
+		}
+	}
+
+	handleClick = (colIndex, rowIndex) => (event) => {
+		const tile = this.state.table[rowIndex][colIndex];
+		if (tile != null) {
+			console.log('select/reselect')
+			this.setState({ selected: [colIndex, rowIndex] })
+		} else if (this.state.selected != null && this.validMove(this.state.selected[0], this.state.selected[1], colIndex, rowIndex)) {
+			console.log(tile)
+			const table = [...this.state.table];
+			table[rowIndex][colIndex] = this.state.table[this.state.selected[1]][this.state.selected[0]]
+			table[this.state.selected[1]][this.state.selected[0]] = null;
+			this.setState({ table, selected: null })
+
+			console.log('clicked', this.state.selected)
+		}
+
 	}
 
 
@@ -103,9 +131,11 @@ class Game extends Component {
 														const piece = this.state.table[rowIndex][colIndex];
 
 														return (
-															<td class={this.tileColour(colIndex, rowIndex)}>
+															<td class={this.tileColour(colIndex, rowIndex)} onClick={this.handleClick(colIndex, rowIndex)}>
 																{piece != null &&
-																	<Tile player={piece.player} type={piece.type} onClick={this.handleClick} col={colIndex} row={rowIndex} />
+																	<Tile player={piece.player} type={piece.type}
+																		col={colIndex} row={rowIndex}
+																		rotate={piece.rotate} />
 																}
 															</td>
 														)

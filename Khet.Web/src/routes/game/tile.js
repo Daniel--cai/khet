@@ -14,21 +14,18 @@ export const Piece = {
 
 
 export default class Tile extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     handleClick = (event) => {
         console.log(this.props)
         this.props.onClick(this.props)
     }
 
-    render({ player, type, onClick, col, row }, ) {
+    render({ player, type, onClick, col, row, rotate },{}) {
         return (
             <img
-                class={classNames(style.piece, player == 0 ? style.friendly : '')}
+                class={classNames(style.piece, { [style.friendly]: player == 0 })}
                 src={Piece[type]} direction="N"
-                onClick={this.handleClick} />
+                style={{ 'transform': `rotate(${rotate * 90}deg)` }}/>
         )
     }
 }
