@@ -5,11 +5,26 @@ import Tile, { Piece } from './Tile'
 import immutable from 'immutable';
 import { InitialiseBoard } from './initialise'
 import { connect } from 'redux-zero/preact';
+import actions from './actions';
 
-import WebsocketClient from '../../framework/WebsocketClient'
+import IoTClient, { MOVE_TOPIC } from '../../framework/IoTClient'
 import Guid from 'guid';
 //const getClientId = () => 'web-client:' + Guid.raw();
 const getMessageId = () => 'message-id:' + Guid.raw();
+
+/*
+Move {
+	Game ID
+	Piece ID
+	ParticipantID 
+	Move Type  -> Name
+	Move Order
+	Move Notation
+	From Position
+	To Position
+	Rotation
+}
+*/
 
 class Game extends Component {
 	constructor(props) {
@@ -19,19 +34,23 @@ class Game extends Component {
 			message: [],
 			isConnected: false,
 			table: InitialiseBoard(),
-			selected: null
+			selected: null,
+			moves: []
 		}
 	}
 
 	connect = async () => {
-		this.client = new WebsocketClient(this.props.guid, this.props.username)
+		this.client = new IoTClient(this.props.guid, this.props.username)
 
 		try {
 			const response = await this.client.connect();
 			this.setState({ isConnected: true });
 			console.log('connected!', response)
 			this.client.onMessageReceived((topic, message) => {
-				console.log('received info', message)
+				console.log('received info', topic, message)
+				console.log(message.message)
+				if (topic == MOVE_TOPIC)
+					this.handleMove(message.message)
 			})
 		} catch (ex) {
 			console.log('error when connecting to IOT ', ex)
@@ -45,7 +64,11 @@ class Game extends Component {
 		})
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		await this.props.setUsername({
+			name: "Player1",
+			email: "player12"
+		})
 		this.connect()
 	}
 
@@ -91,19 +114,45 @@ class Game extends Component {
 		}
 	}
 
+
+	notation(pos1, pos2) {
+		const notation1 = `${String.fromCharCode(97 + pos1[0])}${pos1[1]}`
+		const notation2 = `${String.fromCharCode(97 + pos2[0])}${pos2[1]}`
+		return `${notation1} ${notation2}`;
+	}
+
+	handleMove(notation) {
+		let [pos1, pos2] = notation.split(" ");
+		pos1 = pos1.split("")
+		pos2 = pos2.split("")
+		pos1[0] = pos1[0].charCodeAt(0) - 97
+		pos2[0] = pos2[0].charCodeAt(0) - 97
+		this.move(pos1,pos2)
+		console.log(pos1, pos2)
+	}
+
+	move(pos1, pos2) {
+		const table = [...this.state.table];
+		table[pos2[1]][pos2[0]] = this.state.table[pos1[1]][pos1[0]]
+		table[pos1[1]][pos1[0]] = null;
+
+		const notation = this.notation(pos1, pos2);
+		this.setState({ table, selected: null, moves: [...this.state.moves, notation] })
+		//this.onSend(notation);
+	}
+
+	rotate(pos1, direction) {
+
+	}
+
 	handleClick = (colIndex, rowIndex) => (event) => {
 		const tile = this.state.table[rowIndex][colIndex];
 		if (tile != null) {
 			console.log('select/reselect')
 			this.setState({ selected: [colIndex, rowIndex] })
 		} else if (this.state.selected != null && this.validMove(this.state.selected[0], this.state.selected[1], colIndex, rowIndex)) {
-			console.log(tile)
-			const table = [...this.state.table];
-			table[rowIndex][colIndex] = this.state.table[this.state.selected[1]][this.state.selected[0]]
-			table[this.state.selected[1]][this.state.selected[0]] = null;
-			this.setState({ table, selected: null })
-
-			console.log('clicked', this.state.selected)
+			const notation = this.notation(this.state.selected, [colIndex, rowIndex]);
+			this.onSend(notation);
 		}
 
 	}
@@ -112,42 +161,66 @@ class Game extends Component {
 	render() {
 		return (
 			<section class="hero is-fullheight">
-				<div class="hero-body">
-					<div class="container">
-						<p class="title is-1">
-							Your turn
+				<div class="container">
+					<p class="title is-1">
+						Your turn
 						</p>
-						<p>https://www.flaticon.com/packs/egypt-line-craft?word=sphinx&group_id=1</p>
-						<table class={style.table}>
-							<thead />
-							<tbody>
-								{
-									this.state.table.map((row, rowIndex) => {
-										{/* <img class={classNames(style.piece, piece.player == 0 ? style.friendly : '')} src={Piece[piece.type]} /> */ }
-										return (
-											<tr>
-												{
-													row.map((col, colIndex) => {
-														const piece = this.state.table[rowIndex][colIndex];
+					<div class="columns">
+						<div class="column is-three-quarters">
+							<p>https://www.flaticon.com/packs/egypt-line-craft?word=sphinx&group_id=1</p>
+							<table class={style.table}>
+								<thead />
+								<tbody>
+									{
+										this.state.table.map((row, rowIndex) => {
+											{/* <img class={classNames(style.piece, piece.player == 0 ? style.friendly : '')} src={Piece[piece.type]} /> */ }
+											return (
+												<tr>
+													{
+														row.map((col, colIndex) => {
+															const piece = this.state.table[rowIndex][colIndex];
 
-														return (
-															<td class={this.tileColour(colIndex, rowIndex)} onClick={this.handleClick(colIndex, rowIndex)}>
-																{piece != null &&
-																	<Tile player={piece.player} type={piece.type}
-																		col={colIndex} row={rowIndex}
-																		rotate={piece.rotate} />
-																}
-															</td>
-														)
-													})
-												}
-											</tr>
-										)
-									})
-								}
-							</tbody>
-						</table>
-						<section>
+															return (
+																<td class={this.tileColour(colIndex, rowIndex)} onClick={this.handleClick(colIndex, rowIndex)}>
+																	{piece != null &&
+																		<Tile player={piece.player} type={piece.type}
+																			col={colIndex} row={rowIndex}
+																			rotate={piece.rotate} />
+																	}
+																</td>
+															)
+														})
+													}
+												</tr>
+											)
+										})
+									}
+								</tbody>
+							</table>
+						</div>
+						<div class="column">
+							<div class="tabs">
+								<ul>
+									<li class="is-active"><a>Players</a></li>
+									<li class=""><a>History</a></li>
+									<li class=""><a>Chat</a></li>
+								</ul>
+							</div>
+							<div class="tile is-parent">
+								<article class="tile is-child box">
+									<div class="content">
+										<div class="content">
+											{
+												this.state.moves.map(move => {
+													return (
+														<p>{move}</p>
+													)
+												})
+											}
+										</div>
+									</div>
+								</article>
+							</div>
 							<div class="field has-addons">
 								<div class="control">
 									<input class="input" type="text" placeholder="Enter your message..." />
@@ -158,16 +231,10 @@ class Game extends Component {
 						  			</a>
 								</div>
 							</div>
-						</section>
-					</div>
-				</div>
-				<footer class="footer">
-					<div class="container">
-						<div class="content has-text-centered">
-							<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 						</div>
 					</div>
-				</footer>
+				</div>
+
 			</section >
 
 		);
@@ -175,4 +242,4 @@ class Game extends Component {
 }
 
 const mapToProps = ({ username, loading, guid }) => ({ username, loading, guid });
-export default connect(mapToProps, {})(Game)
+export default connect(mapToProps, actions)(Game)

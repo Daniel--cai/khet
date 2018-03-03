@@ -2,10 +2,10 @@
 
 import mqtt from 'mqtt';
 
-const LAST_WILL_TOPIC = 'last-will';
-const MOVE_TOPIC = 'move'
-const CLIENT_CONNECTED = 'client-connected';
-const CLIENT_DISCONNECTED = 'client-disconnected';
+export const LAST_WILL_TOPIC = 'last-will';
+export const MOVE_TOPIC = 'move'
+export const CLIENT_CONNECTED = 'client-connected';
+export const CLIENT_DISCONNECTED = 'client-disconnected';
 
 const getNotification = (clientId, username) => JSON.stringify({ clientId, username });
 
@@ -68,7 +68,7 @@ export default (clientId, username) => {
     clientWrapper.sendMessage = (message) => {
         validateClientConnected(client)
         client.publish(MOVE_TOPIC, JSON.stringify(message));
-        console.log(`Sent message: ${MESSAGE_TOPIC} - ${JSON.stringify(message)}`);
+        console.log(`Sent message: ${MOVE_TOPIC} - ${JSON.stringify(message)}`);
         return clientWrapper;
     };
     return clientWrapper;
